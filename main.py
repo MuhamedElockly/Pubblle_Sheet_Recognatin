@@ -13,7 +13,7 @@ widthImg = 210 * 4
 # pathImage = "denemeler/100luk_numarali.jpg"
 questions = 20
 choices = 6
-
+columnNum = 3
 
 def optic1(ans_txt1, ans_txt2, ans_txt3, pathImage, save_images=True, resim_listesi=None):
     # cevap anahtarini dosyadan okuma ve sayiya cevirme
@@ -106,25 +106,18 @@ def optic1(ans_txt1, ans_txt2, ans_txt3, pathImage, save_images=True, resim_list
         student_id = functions.id_answers(10, myPixelVal_2)
         # print(student_id)
 
-       
-        column_3 = functions.splitColumn(imgThresh_1)
-        boxes_1 = functions.splitBoxes(column_3[0])
-        boxes_2 = functions.splitBoxes(column_3[1])
-        boxes_3 = functions.splitBoxes(column_3[2])
-        # boxes_1
-        myPixelVal_1 = functions.pixelVal(questions, choices, boxes_1)
-        myIndex_1 = functions.user_answers(questions, myPixelVal_1)
-        grading_1, wrong_ans_1 = functions.grading(ans_1, questions, myIndex_1)
+        column_3 = functions.splitColumn(imgThresh_1, columnNum)
+        tempGrading = []
+        tempWrongAnswer = []
+        for i in range(0, columnNum):
+            boxes_1 = functions.splitBoxes(column_3[i])
 
-        # boxes_2
-        myPixelVal_2 = functions.pixelVal(questions, choices, boxes_2)
-        myIndex_2 = functions.user_answers(questions, myPixelVal_2)
-        grading_2, wrong_ans_2 = functions.grading(ans_2, questions, myIndex_2)
-
-        # boxes_3
-        myPixelVal_3 = functions.pixelVal(questions, choices, boxes_3)
-        myIndex_3 = functions.user_answers(questions, myPixelVal_3)
-        grading_3, wrong_ans_3 = functions.grading(ans_3, questions, myIndex_3)
+            # boxes_1
+            myPixelVal_1 = functions.pixelVal(questions, choices, boxes_1)
+            myIndex_1 = functions.user_answers(questions, myPixelVal_1)
+            grading_1, wrong_ans_1 = functions.grading(ans_1, questions, myIndex_1)
+            tempGrading.append(grading_1)
+            tempWrongAnswer.append(wrong_ans_1)
 
         student_idFix = ""
         for number in student_id:
@@ -140,13 +133,18 @@ def optic1(ans_txt1, ans_txt2, ans_txt3, pathImage, save_images=True, resim_list
         #  cv2.destroyAllWindows()
 
         resim_listesi = [img, imgGray, imgBlur, imgCanny, imgContours, imgBiggestContour, imgThresh_1, imgThresh_2]
-        grading = [grading_1, grading_2, grading_3]
+        for i in range(0, columnNum):
+            grading = []
+            grading.append(tempGrading[i])
+
         result = 0
         for i in range(0, len(grading)):
             result += grading[i]
         print("The Result Is ", (int)(result / 3))
         print("Seat Number Is : ", student_idFix)
-        wrong_ans = [wrong_ans_1, wrong_ans_2, wrong_ans_3]
+        for i in range(0, columnNum):
+            wrong_ans = []
+            wrong_ans.append(tempWrongAnswer[i])
     return result, wrong_ans, student_idFix, resim_listesi
 
 
@@ -158,22 +156,22 @@ if __name__ == "__main__":
     conn = pyodbc.connect('Driver={SQL Server};Server=MOHAMED-ELOCKLY;Database=students;Trusted_Connection=yes;')
     cursor = conn.cursor()
     pdf_file = r'C:\Users\dell\PycharmProjects\pythonProject\environment\pubble sheet.pdf'
-    target_path=r'C:/Users/dell/PycharmProjects/pythonProject/pubble_sheet_images/'
-    pdf_operations.extractFromPdf(pdf_file,target_path)
-images=os.listdir(r'C:/Users/dell/PycharmProjects/pythonProject/pubble_sheet_images/')
-img_nums= len(images)
-for i in range(1,img_nums):
-     img = cv2.imread(target_path+str(i)+".jpg")
-     cv2.imshow('Images', img)
-     cv2.waitKey(0)
-     cv2.destroyAllWindows()
-     grade, wrong, seat_nember, temp = optic1(r'C:\Users\dell\PycharmProjects\pythonProject\environment\data\answer1.txt',
-                                         r'C:\Users\dell\PycharmProjects\pythonProject\environment\data\answer2.txt',
-                                         r'C:\Users\dell\PycharmProjects\pythonProject\environment\data\answer3.txt',
-                                         img, True)
+    target_path = r'C:/Users/dell/PycharmProjects/pythonProject/pubble_sheet_images/'
+    pdf_operations.extractFromPdf(pdf_file, target_path)
+images = os.listdir(r'C:/Users/dell/PycharmProjects/pythonProject/pubble_sheet_images/')
+img_nums = len(images)
+for i in range(1, img_nums):
+    img = cv2.imread(target_path + str(i) + ".jpg")
+    cv2.imshow('Images', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    grade, wrong, seat_nember, temp = optic1(
+        r'C:\Users\dell\PycharmProjects\pythonProject\environment\data\answer1.txt',
+        r'C:\Users\dell\PycharmProjects\pythonProject\environment\data\answer2.txt',
+        r'C:\Users\dell\PycharmProjects\pythonProject\environment\data\answer3.txt',
+        img, True)
 
-     seat_number = int(seat_nember)
-     grade = int(grade)
-     cursor.execute('INSERT INTO student (seat_number, degree) VALUES(?,?)', (seat_number,grade,))
-     cursor.commit()
-
+    seat_number = int(seat_nember)
+    grade = int(grade)
+    cursor.execute('INSERT INTO student (seat_number, degree) VALUES(?,?)', (seat_number, grade,))
+    cursor.commit()
