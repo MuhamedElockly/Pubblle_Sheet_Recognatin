@@ -45,14 +45,13 @@ def reorder(myPoints):
 # siklari bolmek icin 20 tane soru vertical/ 5 tane isaret alani +1 tane soru sayisi yazan yer
 # 6 horizatanl bolmek
 def splitBoxes(img):
-    rows = np.vsplit(img, 20)  # vertical
-    boxes = []
+    rows = np.vsplit(img,20) #vertical
+    boxes=[]
     for r in rows:
-        cols = np.hsplit(r, 6)  # horizantal
+        cols= np.hsplit(r,6) #horizantal
         for box in cols:
             boxes.append(box)
     return boxes
-
 
 # ogrenci numarasi alani icin ayni fonksiyonu kullandik 
 # yuakrdakisini silip sadece bu da kullanilabilir dogru degerler ile
@@ -75,7 +74,6 @@ def splitColumn(img):
 
     return column
 
-
 # puan hesaplama alani
 # soru sayisi dogru cevaplari ve ogrenci cevaplarini aliyor
 # bunlari karsilastirip yeni bir listeye 1/0 seklinde kodluyor
@@ -84,6 +82,8 @@ def grading(answers, num_questions, myAnswers):
     grading = []
     wrong_ans = []
     for x in range(0, num_questions):
+        print(str(answers[x]) + "  :  " + str(myAnswers[x]))
+
         if answers[x] == myAnswers[x]:
             grading.append(1)
         else:
@@ -100,17 +100,19 @@ def grading(answers, num_questions, myAnswers):
             if myAnswers[x] == 5:
                 wrong_ans.append("E")
 
-    score = (sum(grading) / num_questions) * 100
+   # score = (sum(grading) / num_questions) * 100
+    score = sum(grading)
     return score, wrong_ans
 
 
-# piksel degerlerinde kullanici cevaplarini 
+# piksel degerlerinde kullanici cevaplarini
 # okuyupu index seklinde listeye kaydediyor
 def user_answers(num_questions, myPixelVal):
     myIndex = []
     for x in range(0, num_questions):
         arr = myPixelVal[x]
         myIndexVal = np.where(arr == np.amax(arr))
+
         myIndex.append(myIndexVal[0][0])
     return myIndex
 
@@ -138,6 +140,7 @@ def id_reorder(myPixelVal):
 def id_answers(vertical_num, myPixelVal):
     myIndex = []
     for x in range(0, vertical_num):
+
         arr = myPixelVal[x]
         myIndexVal = np.where(arr == np.amax(arr))
         myIndex.append(myIndexVal[0][0])
@@ -147,17 +150,16 @@ def id_answers(vertical_num, myPixelVal):
 
 # Return The Value Of Pixel In Each Bubble
 
-def pixelVal(num_questions, choices, box):
-    countR = 0  # rows
-    countC = 0  # column
-    myPixelVal = np.zeros((num_questions, choices))
+def pixelVal(num_questions,choices,box):
+    countR=0 #rows
+    countC=0 #column
+    myPixelVal = np.zeros((num_questions,choices))
     for image in box:
         totalPixels = cv2.countNonZero(image)
-        myPixelVal[countR][countC] = totalPixels
+        myPixelVal[countR][countC]= totalPixels
         countC += 1
-        if (countC == choices): countC = 0;countR += 1
+        if (countC==choices):countC=0;countR +=1
     return myPixelVal
-
 
 # dosyadan cevap anahtarinin okunmasi
 def read_answers(dosya_adi):
@@ -190,7 +192,6 @@ def answers2numbers(answers):
             print("Oppss Check Txt file")
     return num_answers
 
-
 def image_show(images):
     """
     col1, col2, col3 = st.columns(3)
@@ -221,4 +222,3 @@ def image_show(images):
         st.header("6")
         st.image(images[7], width=200)
      """
-    
