@@ -10,7 +10,7 @@ import pyodbc
 heightImg = 300 * 4
 widthImg = 210 * 4
 
-questions = 20
+questions = 40
 choices = 6
 
 
@@ -43,7 +43,7 @@ def optic1(ans_txt1, ans_txt2, ans_txt3, pathImage, save_images=True, resim_list
     print("Horizontal Lines : ", ratio)
     if ratio < 1:
         print("The image is horizontal.")
-        img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+        #img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
 
     # img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
     img = cv2.resize(img, (widthImg, heightImg))  # RESIZE IMAGE
@@ -127,9 +127,9 @@ def optic1(ans_txt1, ans_txt2, ans_txt3, pathImage, save_images=True, resim_list
         for i in range(0, len(resim_listesi)):
             cv2.imwrite(f"images/{student_idFix}___{i}.jpg", resim_listesi[i])
         # print(student_idFix)
-        #  cv2.imshow("My Image", column_3[0])
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
+           # cv2.imshow("My Image", resim_listesi[i])
+           # cv2.waitKey(0)
+            #cv2.destroyAllWindows()
 
         resim_listesi = [img, imgGray, imgBlur, imgCanny, imgContours, imgBiggestContour, imgThresh_1, imgThresh_2]
         grading = [grading_1, grading_2, grading_3]

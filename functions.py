@@ -42,10 +42,8 @@ def reorder(myPoints):
     return myPointsNew
 
 
-# siklari bolmek icin 20 tane soru vertical/ 5 tane isaret alani +1 tane soru sayisi yazan yer
-# 6 horizatanl bolmek
 def splitBoxes(img):
-    rows = np.vsplit(img,20) #vertical
+    rows = np.vsplit(img,40) #vertical
     boxes=[]
     for r in rows:
         cols= np.hsplit(r,6) #horizantal
@@ -53,10 +51,6 @@ def splitBoxes(img):
             boxes.append(box)
     return boxes
 
-# ogrenci numarasi alani icin ayni fonksiyonu kullandik 
-# yuakrdakisini silip sadece bu da kullanilabilir dogru degerler ile
-# ogrenci numarasi alani 0-9 arasi sayilardan 10 tane isaretleme yeri iceriyor
-# 10x10seklinde boleriz
 def split_num(img, vertical, horizantal):
     rows = np.vsplit(img, vertical)  # vertical
     boxes = []
@@ -67,17 +61,11 @@ def split_num(img, vertical, horizantal):
     return boxes
 
 
-# yan yana 3 tane birlesik ders alani oldugu icin onlari 3 ayri 
-# sekle getiriyor
 def splitColumn(img):
     column = np.hsplit(img, 3)
 
     return column
 
-# puan hesaplama alani
-# soru sayisi dogru cevaplari ve ogrenci cevaplarini aliyor
-# bunlari karsilastirip yeni bir listeye 1/0 seklinde kodluyor
-# 1ler toplanip puan hesaplanmis oluyor
 def grading(answers, num_questions, myAnswers):
     grading = []
     wrong_ans = []
@@ -105,8 +93,6 @@ def grading(answers, num_questions, myAnswers):
     return score, wrong_ans
 
 
-# piksel degerlerinde kullanici cevaplarini
-# okuyupu index seklinde listeye kaydediyor
 def user_answers(num_questions, myPixelVal):
     myIndex = []
     for x in range(0, num_questions):
@@ -117,9 +103,6 @@ def user_answers(num_questions, myPixelVal):
     return myIndex
 
 
-# student id kismi yukardan asagiya dogru karsilastirma yaparak
-# isretli alan tespit edilecegi icin satir ve sutunlari tekrar duzenlemiz gerekti
-# [[1,2,3],[4,5,6],[7,8,9]] ----> [[1,4,7],[2,5,8],[3,6,9]]
 def id_reorder(myPixelVal):
     duz_liste = []
     for sutun in range(len(myPixelVal[0])):
@@ -136,7 +119,7 @@ def id_reorder(myPixelVal):
 
 
 # ogrenci numarasi kisminin piksel degerine gore hangisinin iseretli
-# oldugunun tespiti    
+# oldugunun tespiti
 def id_answers(vertical_num, myPixelVal):
     myIndex = []
     for x in range(0, vertical_num):
